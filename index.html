@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7fa">
+    <title>South Signal Operations</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Primary navigation">
+        <a class="brand" href="#" aria-label="South Signal Operations home">
+          <span class="brand-mark" aria-hidden="true">S</span>
+          <span class="brand-copy"><strong>South</strong><small>Signal operations</small></span>
+        </a>
+
+        <p class="nav-label">WORKSPACE</p>
+        <nav class="primary-nav">
+          <button class="nav-item is-active" data-view="overview" aria-current="page">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="5" height="5" rx="1"/><rect x="12" y="3" width="5" height="5" rx="1"/><rect x="3" y="12" width="5" height="5" rx="1"/><rect x="12" y="12" width="5" height="5" rx="1"/></svg>
+            Overview
+          </button>
+          <button class="nav-item" data-view="junctions">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17s5-4.1 5-9a5 5 0 1 0-10 0c0 4.9 5 9 5 9Z"/><circle cx="10" cy="8" r="1.7"/></svg>
+            Junctions <span class="nav-count" id="nav-junction-count">316</span>
+          </button>
+          <button class="nav-item" data-view="maintenance">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4.5h12M4 10h12M4 15.5h12"/><circle cx="2.5" cy="4.5" r=".7"/><circle cx="2.5" cy="10" r=".7"/><circle cx="2.5" cy="15.5" r=".7"/></svg>
+            PM schedule
+          </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <span class="local-indicator"></span>
+          <span>Offline-ready workspace</span>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="breadcrumbs"><span>Qatar South</span><span class="crumb-separator">/</span><span id="breadcrumb-current">Overview</span></div>
+          <div class="snapshot"><span class="snapshot-dot"></span><span>Inventory snapshot</span><strong>15 Jul 2026</strong></div>
+        </header>
+
+        <div class="page-wrap">
+          <section class="page-heading">
+            <div>
+              <p class="eyebrow">ASSET OPERATIONS <span class="eyebrow-line"></span></p>
+              <h1 id="page-title">Traffic signal overview</h1>
+              <p class="page-subtitle" id="page-subtitle">A clear view of the junction register and planned maintenance workload.</p>
+            </div>
+            <button class="source-button" id="source-button" type="button" aria-expanded="false" aria-controls="source-popover">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 9v4M10 6.4h.01"/></svg>
+              Data sources
+            </button>
+          </section>
+
+          <section class="source-popover" id="source-popover" hidden aria-label="Data source information">
+            <div>
+              <strong>Asset register</strong>
+              <span>RF003 Qatar South-Junction Inventory of Assets (TS 316 Junctions), 15 Jul 2026</span>
+            </div>
+            <div>
+              <strong>Preventive maintenance</strong>
+              <span>Traffic Signal PM update with Route Description, Version 1</span>
+            </div>
+            <p>Source values are presented as operational planning data. Network addresses and infrastructure connection details are not included.</p>
+          </section>
+
+          <section class="toolbar" aria-label="Filter records">
+            <label class="search-field">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.7" cy="8.7" r="5.6"/><path d="m13 13 4 4"/></svg>
+              <span class="visually-hidden">Search records</span>
+              <input id="search-input" type="search" placeholder="Search junction, ID or area" autocomplete="off">
+              <kbd>/</kbd>
+            </label>
+            <label class="filter-field">
+              <span class="visually-hidden">Filter by municipality</span>
+              <select id="municipality-filter"><option value="">All municipalities</option></select>
+            </label>
+            <label class="filter-field" id="status-filter-wrap">
+              <span class="visually-hidden">Filter by register status</span>
+              <select id="status-filter">
+                <option value="">All register statuses</option>
+                <option value="Operational">Operational</option>
+                <option value="Needs verification">Needs verification</option>
+                <option value="Other">Other status</option>
+              </select>
+            </label>
+            <label class="filter-field" id="routine-filter-wrap">
+              <span class="visually-hidden">Filter by maintenance routine</span>
+              <select id="routine-filter"><option value="">All routines</option></select>
+            </label>
+            <button class="reset-button" id="reset-filters" type="button">Reset</button>
+          </section>
+
+          <section class="view-panel" id="overview-view">
+            <div class="metric-grid" id="metric-grid"></div>
+            <div class="overview-grid">
+              <section class="panel routine-panel">
+                <div class="panel-heading">
+                  <div><p class="eyebrow">PLANNED WORKLOAD</p><h2>Assignments by routine</h2></div>
+                  <span class="panel-meta">Route plan</span>
+                </div>
+                <div class="routine-chart" id="routine-chart"></div>
+              </section>
+              <section class="panel insight-panel">
+                <div class="insight-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12 3.8 20 18H4L12 3.8Z"/><path d="M12 9v4.5M12 16.4h.01"/></svg>
+                </div>
+                <p class="eyebrow">REGISTER QUALITY</p>
+                <h2 id="review-title">A small set needs a closer look</h2>
+                <p id="review-copy"></p>
+                <button class="text-button" type="button" data-open-view="junctions">Review junctions <span aria-hidden="true">→</span></button>
+              </section>
+            </div>
+            <section class="panel table-panel">
+              <div class="panel-heading table-heading">
+                <div><p class="eyebrow">JUNCTION REGISTER</p><h2>Asset register preview</h2></div>
+                <button class="text-button" type="button" data-open-view="junctions">View all <span aria-hidden="true">→</span></button>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead><tr><th scope="col">Junction</th><th scope="col">Municipality</th><th scope="col">Type</th><th scope="col">PM routines</th><th scope="col">Register status</th><th><span class="visually-hidden">Details</span></th></tr></thead>
+                  <tbody id="overview-table"></tbody>
+                </table>
+              </div>
+            </section>
+          </section>
+
+          <section class="view-panel" id="junctions-view" hidden>
+            <section class="panel table-panel full-table-panel">
+              <div class="panel-heading table-heading">
+                <div><p class="eyebrow">ASSET REGISTER</p><h2>Junction directory</h2><p class="section-caption" id="junction-result-count"></p></div>
+                <span class="panel-meta">316 listed assets</span>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead><tr><th scope="col">Junction</th><th scope="col">Municipality</th><th scope="col">Zone</th><th scope="col">Type</th><th scope="col">PM routines</th><th scope="col">Register status</th><th><span class="visually-hidden">Details</span></th></tr></thead>
+                  <tbody id="junction-table"></tbody>
+                </table>
+              </div>
+              <div class="table-footer" id="junction-footer"></div>
+            </section>
+          </section>
+
+          <section class="view-panel" id="maintenance-view" hidden>
+            <section class="panel table-panel full-table-panel">
+              <div class="panel-heading table-heading">
+                <div><p class="eyebrow">PREVENTIVE MAINTENANCE</p><h2>Route assignments</h2><p class="section-caption" id="pm-result-count"></p></div>
+                <span class="panel-meta">Routine frequency</span>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead><tr><th scope="col">Junction</th><th scope="col">Municipality</th><th scope="col">Routine</th><th scope="col">MX location</th><th><span class="visually-hidden">Details</span></th></tr></thead>
+                  <tbody id="pm-table"></tbody>
+                </table>
+              </div>
+              <div class="table-footer" id="pm-footer"></div>
+            </section>
+          </section>
+
+          <footer class="page-footer">
+            <span>South Signal Operations <span class="footer-divider">·</span> Internal planning view</span>
+            <span id="footer-count"></span>
+          </footer>
+        </div>
+      </main>
+    </div>
+
+    <div class="drawer-backdrop" id="drawer-backdrop" hidden></div>
+    <aside class="detail-drawer" id="detail-drawer" aria-label="Junction details" aria-hidden="true">
+      <div class="drawer-top">
+        <div><p class="eyebrow">JUNCTION RECORD</p><span class="drawer-id" id="detail-id"></span></div>
+        <button class="icon-button" id="close-drawer" type="button" aria-label="Close junction details">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg>
+        </button>
+      </div>
+      <h2 id="detail-name"></h2>
+      <p class="detail-location" id="detail-location"></p>
+      <div class="detail-status" id="detail-status"></div>
+      <div class="detail-divider"></div>
+      <dl class="detail-facts">
+        <div><dt>Municipality</dt><dd id="detail-municipality"></dd></div>
+        <div><dt>Zone</dt><dd id="detail-zone"></dd></div>
+        <div><dt>Junction type</dt><dd id="detail-type"></dd></div>
+      </dl>
+      <div class="detail-divider"></div>
+      <div class="drawer-section-heading"><h3>PM routines</h3><span id="detail-routine-count"></span></div>
+      <ul class="routine-list" id="detail-routines"></ul>
+      <p class="drawer-note">Routine assignments are from the supplied PM route plan. This view does not include work completion records.</p>
+    </aside>
+
+    <script src="data/app-data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
